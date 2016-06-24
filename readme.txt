@@ -2,6 +2,7 @@ mido is a software utility script for musicians. with mido you can controll shor
 of e.g. your DAW with a midi controller.
 you can set up your mappings in the config file. there allready are mappings. you can
 delete them. their purpose is mainly to demonstrate the syntax of the mapping.
+it has been tested fractional for osx but it should work for all plattforms.
 
 dependencies:
     python3
