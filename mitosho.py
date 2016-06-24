@@ -12,15 +12,23 @@ def read_conf():
     try:
         with open('config') as config:
             for line in config:
-                if len(line) < 1 or line[0] == '#':
+                if len(line) is 0 or line[0] == '#':
                     pass
                 elif len(line) > 5 and line[0:7] == 'device:':
-                    device = line[9:]
+                    device = line[8:-1]
                 else:
                     midi, shortcut = line.split(':')
-                    midi = line.split(' ')
-                    shortcut = line.split(' ')
-                    message = mido.Message('note_on', note=midi[0], channel=midi[1])
+                    midi = midi.split(' ')
+                    shortcut = shortcut.split(' ')
+                    for key in shortcut:
+                        if key[-1:] == '\n':
+                            shortcut.remove(key)
+                            shortcut.append(key[:-1])
+
+                    message = (int(midi[0]), int(midi[1]))
+                    for sh in shortcut:
+                        if len(sh) < 1:
+                            shortcut.remove(sh)
                     midi_to_shortcut[message] = shortcut
 
         if device is "":
@@ -28,7 +36,7 @@ def read_conf():
             sys.exit()
 
         return (device, midi_to_shortcut)
-    except TypeError:
+    except OSError:
         print('Error reading config')
 
 def process_message(in_msg, midi_to_shortcut):
@@ -36,12 +44,15 @@ def process_message(in_msg, midi_to_shortcut):
     keyboard = PyKeyboard()
     print(in_msg)
     try:
-        if mido.Note(in_msg.type, note=in_msg.note, channel=in_msg.channel) in midi_to_shortcut:
-            shortcut = midi_to_shortcut(mido.Note.type, note=in_msg.note, channel=in_msg.channel)
-            keyboard.press_key(shortcut)
-            keyboard.release_key(shortcut)
+        if (in_msg.note, in_msg.channel) in midi_to_shortcut:
+            shortcut = midi_to_shortcut[(in_msg.note, in_msg.channel)]
+            print('shortcut: ', shortcut)
+            for sh in shortcut:
+                keyboard.press_key(sh)
+            for sh in shortcut:
+                keyboard.release_key(sh)
 
-    except AttributeError:
+    except OSError:
         print('note not recognized')
 
 def main():
