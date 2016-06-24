@@ -12,11 +12,16 @@ def read_conf():
     try:
         with open('config') as config:
             for line in config:
-                if len(line) is 0 or line[0] == '#':
+                if len(line.strip()) == 0 or line[0] == '#' or line[0] == '/n':
                     pass
-                elif len(line) > 5 and line[0:7] == 'device:':
+                    print('empty :', line)
+                elif len(line) > 6 and line[0:7] == 'device:':
                     device = line[8:-1]
                 else:
+
+                    print('else: ', line)
+                    if line is 'n':
+                        print('empty: ', line)
                     midi, shortcut = line.split(':')
                     midi = midi.split(' ')
                     shortcut = shortcut.split(' ')
@@ -44,7 +49,7 @@ def process_message(in_msg, midi_to_shortcut):
     keyboard = PyKeyboard()
     print(in_msg)
     try:
-        if (in_msg.note, in_msg.channel) in midi_to_shortcut:
+        if (in_msg.note, in_msg.channel) in midi_to_shortcut and in_msg.type != 'note_off':
             shortcut = midi_to_shortcut[(in_msg.note, in_msg.channel)]
             print('shortcut: ', shortcut)
             for sh in shortcut:
@@ -62,7 +67,6 @@ def main():
     print(mido.get_input_names())
     # input the name off your Midi device here.
     with mido.open_input(device) as inp:
-
         for message in inp:
             process_message(message, midi_to_shortcut)
 

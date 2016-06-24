@@ -1,11 +1,18 @@
+# midi device. to find the name for your midi device, just start the mitosho.py script and a list with all devices
+# is printed to the command line. 
 device: USB Trigger Finger
-# this are the available key commands:
-# a s d f h g z x c v b q w e r y t 1 2 3 4 6 5 = 9 7 - 8 0 ] o u [ i p l j \
-# ' k ; \\ , / n m . ` \r \t \n return  tab  space  delete  escape
-# command  shift  capslock  option  alternate  control rightshift
-# rightoption  rightcontrol  function
+
+# here are the midi parameters and the corresponding key mappings. to find out the midi parameters, enter the name
+# of your midi device above and press the buttons/keys of your midi device, the parameters will be printed to the
+# command line
 # note channel : key seq
 24 0 : command a
 25 0 : command b
 26 0 : command t
 27 0 : command shift t
+
+# this are the available key commands:
+# a s d f h g z x c v b q w e r y t 1 2 3 4 6 5 = 9 7 - 8 0 ] o u [ i p l j \
+# ' k ; \\ , / n m . ` \r \t \n return  tab  space  delete  escape
+# command  shift  capslock  option  alternate  control rightshift
+# rightoption  rightcontrol  function
