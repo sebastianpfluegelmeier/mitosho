@@ -1,0 +1,15 @@
+device: Akai APC-40
+
+# this are the available key commands:
+
+# a s d f h g z x c v b q w e r y t 1 2 3 4 6 5 = 9 7 - 8 0 ] o u [ i p l j \
+# ' k ; \\ , / n m . ` \r \t \n return  tab  space  delete  escape
+# command  shift  capslock  option  alternate  control rightshift
+# rightoption  rightcontrol  function
+
+# note channel : key seq
+43 1 : command alt f
+44 1 : shift g
+45 1 : d d 
+
+
