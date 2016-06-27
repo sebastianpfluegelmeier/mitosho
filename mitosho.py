@@ -1,20 +1,23 @@
 #!/bin/env python3
-"""midi to shortcut utility"""
+"""midi to shortcut utility. takes midi notes from one device and generates virtual keyboard events.
+there should be a config file containing information about the midi notes and the corresponding
+shortcuts"""
 
 import sys
 from pykeyboard import PyKeyboard
 import mido
 
 def read_conf():
-    """reads the config file and returns all substitutions and the device"""
+    """reads the config file and returns all midi notes an corresponding shortcuts and the device"""
+    # the name of the device inside the config file
     device = ''
+    # dict with key: midi note, value: list containing strings with key identifiers
     midi_to_shortcut = {}
     try:
         with open('config') as config:
             for line in config:
                 if len(line.strip()) == 0 or line[0] == '#' or line[0] == '/n':
                     pass
-                    print('empty :', line)
                 elif len(line) > 6 and line[0:7] == 'device:':
                     device = line[8:-1]
                 else:
@@ -31,9 +34,9 @@ def read_conf():
                             shortcut.append(key[:-1])
 
                     message = (int(midi[0]), int(midi[1]))
-                    for sh in shortcut:
-                        if len(sh) < 1:
-                            shortcut.remove(sh)
+                    for key in shortcut:
+                        if len(key) < 1:
+                            shortcut.remove(key)
                     midi_to_shortcut[message] = shortcut
 
         if device is "":
@@ -52,10 +55,10 @@ def process_message(in_msg, midi_to_shortcut):
         if (in_msg.note, in_msg.channel) in midi_to_shortcut and in_msg.type != 'note_off':
             shortcut = midi_to_shortcut[(in_msg.note, in_msg.channel)]
             print('shortcut: ', shortcut)
-            for sh in shortcut:
-                keyboard.press_key(sh)
-            for sh in shortcut:
-                keyboard.release_key(sh)
+            for key in shortcut:
+                keyboard.press_key(key)
+            for key in shortcut:
+                keyboard.release_key(key)
 
     except OSError:
         print('note not recognized')
