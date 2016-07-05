@@ -4,6 +4,7 @@ there should be a config file containing information about the midi notes and th
 shortcuts"""
 
 import sys
+import re
 from pykeyboard import PyKeyboard
 import mido
 
@@ -15,17 +16,31 @@ def read_conf():
     midi_to_shortcut = {}
     try:
         with open('config') as config:
-            for line in config:
-                if len(line.strip()) == 0 or line[0] == '#' or line[0] == '/n':
-                    pass
-                elif len(line) > 6 and line[0:7] == 'device:':
-                    device = line[8:-1]
-                else:
+            conf_lines = []
 
-                    print('else: ', line)
-                    if line is 'n':
-                        print('empty: ', line)
-                    midi, shortcut = line.split(':')
+            # writes config file into a list of strings. one string per line.
+            for line in config:
+                conf_lines.append(line)
+               
+            for line in conf_lines:
+                # removes all comments
+                for pos in range(len(line)):
+                    if line[pos] == '#':
+                        line = line[pos - 1:]
+                        break
+            for line in conf_lines:
+                print(line)
+
+            for line_nr in range(len(conf_lines)):
+                # takes device
+                if 'device: ' in conf_lines[line_nr]:
+                    print('device found')
+                    device = conf_lines[line_nr][8:-1]
+
+                # takes notes to shortcut mappings
+                elif re.match('\d{1,3} \d{1,2} ?: ?.+', line) is not None:
+
+                    midi, shortcut = conf_lines[line_nr].split(':')
                     midi = midi.split(' ')
                     shortcut = shortcut.split(' ')
                     for key in shortcut:
